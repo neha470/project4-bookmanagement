@@ -1,0 +1,19 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "\"Project 4 Books Management\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tapaswee2001Samantaray/Books-Management.git"
+  },
+  "author": "Tapaswee Samantaray , Sagar Maan , Soumya Ranjan Pradhan , Ashanur Hossain",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tapaswee2001Samantaray/Books-Management/issues"
+  },
+  "homepage": "https://github.com/Tapaswee2001Samantaray/Books-Management#readme"
+}
