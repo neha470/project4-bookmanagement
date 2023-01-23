@@ -9,7 +9,7 @@ mongoose.set("strictQuery", true);
 mongoose.connect("mongodb+srv://Tapaswee2001Samantaray:jecky2001@cluster0.zinufff.mongodb.net/booksManagementGroup14Database",
     { useNewUrlParser: true }
 )
-    .then(() => console.log("DB is connected."))
+    .then(() => console.log("mongoDB is connected."))
     .catch((err) => console.log(err));
 
 app.use("/", route);

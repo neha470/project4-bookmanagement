@@ -6,7 +6,7 @@ const bookController = require("../controller/bookController");
 const reviewController = require("../controller/reviewController");
 const middleware = require("../middleware/commonMIddleware");
 
-router.post("/register");
+router.post("/register",userController.createUser);
 router.post("/login");
 router.post("/books");
 router.get("/books");
