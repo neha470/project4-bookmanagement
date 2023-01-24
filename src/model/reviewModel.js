@@ -15,7 +15,7 @@ const reviewSchema = new mongoose.Schema({
         require: true,
         default: 'Guest',
         trim: true,
-        value:{
+        value: {
             type: String,
             trim: true
         }
@@ -43,4 +43,4 @@ const reviewSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-module.exports = mongoose.model('reviewData', reviewSchema)
+module.exports = mongoose.model('reviewData', reviewSchema)

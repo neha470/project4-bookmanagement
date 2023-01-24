@@ -4,55 +4,55 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 const bookSchema = new mongoose.Schema(
     {
         title: {
-           type : String, 
-           required : true, 
-           unique : true,
-           trim : true,
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
         },
         excerpt: {
-            type : String, 
-            required : true,
-            trim : true,
-        }, 
+            type: String,
+            required: true,
+            trim: true,
+        },
         userId: {
-            type : ObjectId, 
-            required : true, 
-            ref : "userData",
-            trim : true,
+            type: ObjectId,
+            required: true,
+            ref: "userData",
+            trim: true,
         },
         ISBN: {
-            type : String, 
-            required : true,
-            unique : true,
-            trim : true,
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
         },
         category: {
-            type : String, 
-            required : true,
-            trim : true,
+            type: String,
+            required: true,
+            trim: true,
         },
         subcategory: {
-            type : String, 
-            required : true,
-            trim : true,
+            type: String,
+            required: true,
+            trim: true,
         },
         reviews: {
-            type : number, 
-            default : 0, 
+            type: Number,
+            default: 0,
         },
         deletedAt: {
-            type : Date, 
-        }, 
+            type: Date,
+        },
         isDeleted: {
-            type : boolean, 
-            default : false,
+            type: Boolean,
+            default: false,
         },
         releasedAt: {
-            type : Date, 
-            required : true, 
+            type: Date,
+            required: true,
         },
-},
-{timestamps : true}) 
+    },
+    { timestamps: true })
 
 
-module.exports = mongoose.model('bookData' , bookSchema)
+module.exports = mongoose.model('bookData', bookSchema)
