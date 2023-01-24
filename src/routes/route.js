@@ -6,6 +6,8 @@ const { createBook, getBooks, getBookById, updateBooks, deleteBookById } = requi
 const reviewController = require("../controller/reviewController");
 const { isAuthenticated, isAuthorized } = require("../middleware/commonMIddleware");
 
+
+
 router.post("/register", createUser);
 router.post("/login", loginUser);
 router.post("/books", isAuthenticated, isAuthorized, createBook);
