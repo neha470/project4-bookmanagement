@@ -81,11 +81,12 @@ const loginUser = async function (req, res) {
             let token = jwt.sign({ userId: userData._id.toString(), iat: Date.now() }, "project4grp14", { expiresIn: "60s" });
 
             let decodedToken = jwt.verify(token, "project4grp14");
+            let UserID = decodedToken.userId;
             let IAT = decodedToken.iat;
             let ExpiresIn = decodedToken.exp;
 
             res.setHeader("x-api-key", token);
-            res.status(201).send({ status: true, message: "Success", data: { "token": token, IAT, ExpiresIn } });
+            res.status(201).send({ status: true, message: "Success", data: { "token": token, UserID, IAT, ExpiresIn } });
         } else {
             return res.status(400).send({ status: false, message: "Body can not be empty" });
         }
