@@ -78,7 +78,13 @@ const loginUser = async function (req, res) {
             const userData = await userModel.findOne({ email: email, password: password })
             if (!userData) return res.status(404).send({ status: false, message: "No such user exist. Please Enter a valid Email and Passowrd." });
 
-            let token = jwt.sign({ userId: userData._id.toString(), iat: Date.now() }, "project4grp14", { expiresIn: "60s" });
+            // let token = jwt.sign({ userId: userData._id.toString(), iat: Date.now() }, "project4grp14", { expiresIn: "60s" });
+
+            let token=jwt.sign({
+                userId:userData._id.toString(),
+                exp: Math.floor(Date.now() / 1000) + (30*60),
+                iat: Math.floor(Date.now())
+            }, 'project4grp14')
 
             let decodedToken = jwt.verify(token, "project4grp14");
             let UserID = decodedToken.userId;
