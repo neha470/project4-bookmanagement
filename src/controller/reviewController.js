@@ -66,8 +66,8 @@ const reviewBook = async function (req, res) {
         }
 
         await bookModel.findOneAndUpdate(
-            {_id:bookId},
-            {$inc:{reviews:1}}
+            { _id: bookId },
+            { $inc: { reviews: 1 } }
         );
         return res.status(201).send({ status: true, message: "Success", data: result });
     } catch (err) {
@@ -133,13 +133,13 @@ const updateBookReview = async function (req, res) {
             updateData.rating = rating;
         }
 
-        updateData.reviewedAt= Date.now();
+        updateData.reviewedAt = Date.now();
 
         let updateReview = await reviewModel.findOneAndUpdate(
             { _id: reviewId, isDeleted: false },
             updateData,
             { new: true }
-        ).select({__v:0, createdAt:0 , updatedAt:0 , isDeleted:0});
+        ).select({ __v: 0, createdAt: 0, updatedAt: 0, isDeleted: 0 });
 
         return res.status(200).send({ status: true, message: "Success", data: updateReview });
     } catch (err) {
@@ -148,9 +148,7 @@ const updateBookReview = async function (req, res) {
 }
 
 
-
-
-const deleteReviewById = async ( req , res ) => {
+const deleteReviewById = async (req, res) => {
     try {
         let data = req.params;
         let { bookId, reviewId } = data;
@@ -178,19 +176,20 @@ const deleteReviewById = async ( req , res ) => {
 
         let deleteReview = await reviewModel.findOneAndUpdate(
             { _id: reviewId, isDeleted: false },
-            {isDeleted:true},
+            { isDeleted: true },
             { new: true }
         );
 
         await bookModel.findOneAndUpdate(
-            {_id:bookId},
-            {$inc:{reviews:-1}},
-            );
-            return res.status(200).send({status:true,message:"Success",data:deleteReview});
-    }catch(error){
-        return res.status(500).send({ status : false , message : error.message})
+            { _id: bookId },
+            { $inc: { reviews: -1 } },
+        );
+        
+        return res.status(200).send({ status: true, message: "Success", data: deleteReview });
+    } catch (error) {
+        return res.status(500).send({ status: false, message: error.message })
     }
 }
 
 
-module.exports = { reviewBook, updateBookReview , deleteReviewById};
+module.exports = { reviewBook, updateBookReview, deleteReviewById };
