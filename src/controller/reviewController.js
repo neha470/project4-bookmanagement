@@ -65,11 +65,14 @@ const reviewBook = async function (req, res) {
             review: reviewData.review
         }
 
-        await bookModel.findOneAndUpdate(
+      let reviewCount=  await bookModel.findOneAndUpdate(
             {_id:bookId},
-            {$inc:{reviews:1}}
-        );
-        return res.status(201).send({ status: true, message: "Success", data: result });
+            {$inc:{reviews:1}},{new:true}
+        )
+
+        let WithReview = reviewCount.toObject()
+         WithReview["reviewsData"]=result
+        return res.status(201).send({ status: true, message: "Success", data: WithReview });
     } catch (err) {
         return res.status(500).send({ status: false, message: err.message });
     }
