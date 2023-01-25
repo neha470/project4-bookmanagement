@@ -39,19 +39,19 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: " Data type of excerpt only be String " });
         }
 
-        if (!userId || !userId.trim()) {
-            return res.status(400).send({ status: false, message: " UserId must be present in body" });
-        }
+        // if (!userId || !userId.trim()) {
+        //     return res.status(400).send({ status: false, message: " UserId must be present in body" });
+        // }
 
-        userId = userId.trim();
-        if (!isValidObjectId(body.userId)) {
-            return res.status(400).send({ status: false, message: "Invalid objectId" });
-        }
+        // userId = userId.trim();
+        // if (!isValidObjectId(body.userId)) {
+        //     return res.status(400).send({ status: false, message: "Invalid objectId" });
+        // }
 
-        const checkUser = await userModel.findById(userId);
-        if (!checkUser) {
-            return res.status(404).send({ status: false, message: "User is not found" });
-        }
+        // const checkUser = await userModel.findById(userId);
+        // if (!checkUser) {
+        //     return res.status(404).send({ status: false, message: "User is not found" });
+        // }
 
         if (!ISBN || !ISBN.trim()) {
             return res.status(400).send({ status: false, message: " ISBN must be present in body" });
@@ -248,7 +248,9 @@ const deleteBookById = async function (req, res) {
         if (!deleteByBookId) {
             return res.status(400).send({ status: false, message: "Book is already deleted, deletion unsuccessful" });
         }
-        res.status(200).send({ status: true, message: "Success", data: deleteByBookId });
+        await reviewModel.updateMany({ bookId : bookId ,isDeleted : false },{ isDeleted : true })
+
+        return rzes.status(200).send({ status: true, message: "Success", data: deleteByBookId });
     } catch (error) {
         res.status(500).send({ status: 'error', error: error.message });
     }
