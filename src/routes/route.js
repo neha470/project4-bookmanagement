@@ -3,9 +3,8 @@ const router = express.Router();
 
 const { createUser, loginUser } = require("../controller/userController");
 const { createBook, getBooks, getBookById, updateBooks, deleteBookById } = require("../controller/bookController");
-const {reviewBook}= require("../controller/reviewController");
+const { reviewBook, updateBookReview } = require("../controller/reviewController");
 const { isAuthenticated, isAuthorized } = require("../middleware/commonMIddleware");
-
 
 
 router.post("/register", createUser);
@@ -15,10 +14,11 @@ router.get("/books", isAuthenticated, getBooks);
 router.get("/books/:bookId", isAuthenticated, getBookById);
 router.put("/books/:bookId", isAuthenticated, isAuthorized, updateBooks);
 router.delete("/books/:bookId", isAuthenticated, isAuthorized, deleteBookById);
-router.post("/books/:bookId/review",reviewBook);
+router.post("/books/:bookId/review", reviewBook);
+router.put("/books/:bookId/review/:reviewId", updateBookReview);
 
 router.all('/*', (req, res) => {
-    res.status(400).send({ status: false, message: " path invalid" })
+    res.status(400).send({ status: false, message: " path invalid" });
 });
 
 module.exports = router;

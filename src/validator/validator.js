@@ -22,4 +22,8 @@ const validateISBN = (ISBN) => {
     return (/^(?=(?:\D*\d){13}(?:(?:\D*\d){3})?$)[\d-]+$/g).test(ISBN);
 }
 
-module.exports = { validateName, validateEmail, validatePassword, validateMobileNo, validatePincode, validateISBN }
+const validatePlace = (value) => {
+    return (/^[^\W\d_]+\.?(?:[-\s'’][^\W\d_]+\.?)*$/).test(value);
+}
+
+module.exports = { validateName, validateEmail, validatePassword, validateMobileNo, validatePincode, validateISBN, validatePlace }

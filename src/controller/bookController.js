@@ -16,7 +16,7 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "Body can not be empty" });
         }
 
-        if (!title || title == " ") {
+        if (!title || !title.trim()) {
             return res.status(400).send({ status: false, message: "title must be present in body" });
         }
 
@@ -30,7 +30,7 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "This title already in use for other book" });
         }
 
-        if (!excerpt || excerpt == " ") {
+        if (!excerpt || !excerpt.trim()) {
             return res.status(400).send({ status: false, message: " Excerpt must be present in body " });
         }
 
@@ -39,7 +39,7 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: " Data type of excerpt only be String " });
         }
 
-        if (!userId || userId == " ") {
+        if (!userId || !userId.trim()) {
             return res.status(400).send({ status: false, message: " UserId must be present in body" });
         }
 
@@ -53,7 +53,7 @@ const createBook = async function (req, res) {
             return res.status(404).send({ status: false, message: "User is not found" });
         }
 
-        if (!ISBN || ISBN == " ") {
+        if (!ISBN || !ISBN.trim()) {
             return res.status(400).send({ status: false, message: " ISBN must be present in body" });
         }
 
@@ -70,7 +70,7 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "This ISBN number is already alotted." });
         }
 
-        if (!category || category == " ") {
+        if (!category || !category.trim()) {
             return res.status(400).send({ status: false, message: "Category must be present in body" });
         }
 
@@ -79,7 +79,7 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "Data type of category only be String." });
         }
 
-        if (!subcategory || subcategory == " ") {
+        if (!subcategory || !subcategory.trim()) {
             return res.status(400).send({ status: false, message: "Subategory must be present in body" });
         }
 
@@ -175,6 +175,9 @@ const updateBooks = async function (req, res) {
 
             let updateData = {};
             if (title) {
+                if(!title.trim()){
+                    return res.status(400).send({status:false , message:"Title can not be empty."});
+                }
                 let trimTitle = title.toLowerCase().trim();
                 const checkTitle = await bookModel.findOne({ title: trimTitle });
                 if (checkTitle) {
@@ -184,11 +187,17 @@ const updateBooks = async function (req, res) {
             }
 
             if (excerpt) {
+                if(!excerpt.trim()){
+                    return res.status(400).send({status:false , message:"Excerpt can not be empty."});
+                }
                 let trimExcerpt = excerpt.toLowerCase().trim();
                 updateData.excerpt = trimExcerpt;
             }
 
             if (ISBN) {
+                if(!ISBN.trim()){
+                    return res.status(400).send({status:false , message:"ISBN can not be empty."});
+                }
                 let trimISBN = ISBN.trim();
                 if (!validateISBN(trimISBN)) {
                     return res.status(400).send({ status: false, message: " Invalid ISBN number it should contain only 13 digits" });

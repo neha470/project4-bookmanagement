@@ -42,7 +42,7 @@ const isAuthorized = async function (req, res, next) {
         const loggedUserId = req.token.userId;
         if (req.originalUrl === "/books") {
             let userId = req.body.userId;
-            if (!userId) {
+            if (!userId || !userId.trim()) {
                 return res.status(400).send({ status: false, message: "userId must be present" });
             }
 
