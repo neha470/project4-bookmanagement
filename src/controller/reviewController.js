@@ -67,7 +67,7 @@ const reviewBook = async function (req, res) {
 
         await bookModel.findOneAndUpdate(
             {_id:bookId},
-            {reviews:{$inc:1}}
+            {$inc:{reviews:1}}
         );
         return res.status(201).send({ status: true, message: "Success", data: result });
     } catch (err) {
@@ -184,7 +184,7 @@ const deleteReviewById = async ( req , res ) => {
 
         await bookModel.findOneAndUpdate(
             {_id:bookId},
-            {reviews:{$inc:-1}},
+            {$inc:{reviews:-1}},
             );
             return res.status(200).send({status:true,message:"Success",data:deleteReview});
     }catch(error){
@@ -193,10 +193,4 @@ const deleteReviewById = async ( req , res ) => {
 }
 
 
-
-
-
-
-
-
-module.exports = { reviewBook, updateBookReview }
+module.exports = { reviewBook, updateBookReview , deleteReviewById};
