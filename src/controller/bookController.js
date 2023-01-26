@@ -175,8 +175,8 @@ const updateBooks = async function (req, res) {
 
             let updateData = {};
             if (title) {
-                if(!title.trim()){
-                    return res.status(400).send({status:false , message:"Title can not be empty."});
+                if (!title.trim()) {
+                    return res.status(400).send({ status: false, message: "Title can not be empty." });
                 }
                 let trimTitle = title.toLowerCase().trim();
                 const checkTitle = await bookModel.findOne({ title: trimTitle });
@@ -187,16 +187,16 @@ const updateBooks = async function (req, res) {
             }
 
             if (excerpt) {
-                if(!excerpt.trim()){
-                    return res.status(400).send({status:false , message:"Excerpt can not be empty."});
+                if (!excerpt.trim()) {
+                    return res.status(400).send({ status: false, message: "Excerpt can not be empty." });
                 }
                 let trimExcerpt = excerpt.toLowerCase().trim();
                 updateData.excerpt = trimExcerpt;
             }
 
             if (ISBN) {
-                if(!ISBN.trim()){
-                    return res.status(400).send({status:false , message:"ISBN can not be empty."});
+                if (!ISBN.trim()) {
+                    return res.status(400).send({ status: false, message: "ISBN can not be empty." });
                 }
                 let trimISBN = ISBN.trim();
                 if (!validateISBN(trimISBN)) {
@@ -248,7 +248,10 @@ const deleteBookById = async function (req, res) {
         if (!deleteByBookId) {
             return res.status(400).send({ status: false, message: "Book is already deleted, deletion unsuccessful" });
         }
-        await reviewModel.updateMany({ bookId : bookId ,isDeleted : false },{ isDeleted : true })
+        await reviewModel.updateMany(
+            { bookId: bookId, isDeleted: false },
+            { isDeleted: true }
+        );
 
         return res.status(200).send({ status: true, message: "Success", data: deleteByBookId });
     } catch (error) {
