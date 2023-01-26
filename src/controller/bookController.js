@@ -16,49 +16,34 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "Body can not be empty" });
         }
 
+        if (title && typeof title != "string") {
+            return res.status(400).send({ status: false, message: "Title must be in string" });
+        }
         if (!title || !title.trim()) {
-            return res.status(400).send({ status: false, message: "title must be present in body" });
+            return res.status(400).send({ status: false, message: "Title must be present in body and can't be empty." });
         }
 
         title = title.toLowerCase().trim();
-        if (typeof title != "string") {
-            return res.status(400).send({ status: false, message: "Data type of title only be String" });
-        }
 
         let checkTitle = await bookModel.findOne({ title: title });
         if (checkTitle) {
             return res.status(400).send({ status: false, message: "This title already in use for other book" });
         }
 
+        if (excerpt && typeof excerpt != "string") {
+            return res.status(400).send({ status: false, message: "Excerpt must be in string" });
+        }
         if (!excerpt || !excerpt.trim()) {
-            return res.status(400).send({ status: false, message: " Excerpt must be present in body " });
+            return res.status(400).send({ status: false, message: " Excerpt must be present in body and can't be empty." });
         }
 
         excerpt = excerpt.trim();
-        if (typeof excerpt != "string") {
-            return res.status(400).send({ status: false, message: " Data type of excerpt only be String " });
+
+        if (ISBN && typeof ISBN != "string") {
+            return res.status(400).send({ status: false, message: "ISBN must be in string" });
         }
-
-        // if (!userId || !userId.trim()) {
-        //     return res.status(400).send({ status: false, message: " UserId must be present in body" });
-        // }
-
-        // userId = userId.trim();
-        // if (!isValidObjectId(body.userId)) {
-        //     return res.status(400).send({ status: false, message: "Invalid objectId" });
-        // }
-
-        // const checkUser = await userModel.findById(userId);
-        // if (!checkUser) {
-        //     return res.status(404).send({ status: false, message: "User is not found" });
-        // }
-
         if (!ISBN || !ISBN.trim()) {
-            return res.status(400).send({ status: false, message: " ISBN must be present in body" });
-        }
-
-        if (typeof ISBN != "string") {
-            return res.status(400).send({ status: false, message: "Data type of ISBN only be String" });
+            return res.status(400).send({ status: false, message: " ISBN must be present in body and it can't be empty." });
         }
 
         if (!validateISBN(ISBN.trim())) {
@@ -70,23 +55,21 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "This ISBN number is already alotted." });
         }
 
+        if (category && typeof category != "string") {
+            return res.status(400).send({ status: false, message: "category must be in string" });
+        }
         if (!category || !category.trim()) {
-            return res.status(400).send({ status: false, message: "Category must be present in body" });
+            return res.status(400).send({ status: false, message: "Category must be present in body and can't be empty." });
         }
-
         category = category.trim();
-        if (typeof category != "string") {
-            return res.status(400).send({ status: false, message: "Data type of category only be String." });
-        }
 
+        if (subcategory && typeof subcategory != "string") {
+            return res.status(400).send({ status: false, message: "subcategory must be in string" });
+        }
         if (!subcategory || !subcategory.trim()) {
-            return res.status(400).send({ status: false, message: "Subategory must be present in body" });
+            return res.status(400).send({ status: false, message: "Subategory must be present in body and can't be empty." });
         }
-
         subcategory = subcategory.trim();
-        if (typeof subcategory != "string") {
-            return res.status(400).send({ status: false, message: "Data type of subcategory only be String." });
-        }
 
         let today = moment();
         body.releasedAt = today.format('YYYY-MM-DD');
@@ -116,7 +99,7 @@ const getBooks = async function (req, res) {
             }
         }
 
-        const bookDetails = await bookModel.find({ ...data, isDeleted: false }).sort({ title: 1 });
+        const bookDetails = await bookModel.find({ ...data, isDeleted: false }).sort({ title: 1 }).select({ isDeleted: 0, createdAt: 0, updatedAt: 0, __v: 0, ISBN: 0, subcategory: 0 });
         if (bookDetails.length == 0) {
             return res.status(404).send({ status: false, message: "Data not found or data already deleted." });
         }
@@ -175,6 +158,9 @@ const updateBooks = async function (req, res) {
 
             let updateData = {};
             if (title) {
+                if (title && typeof title != "string") {
+                    return res.status(400).send({ status: false, message: "Title must be in string" });
+                }
                 if (!title.trim()) {
                     return res.status(400).send({ status: false, message: "Title can not be empty." });
                 }
@@ -187,6 +173,9 @@ const updateBooks = async function (req, res) {
             }
 
             if (excerpt) {
+                if (excerpt && typeof excerpt != "string") {
+                    return res.status(400).send({ status: false, message: "excerpt must be in string" });
+                }
                 if (!excerpt.trim()) {
                     return res.status(400).send({ status: false, message: "Excerpt can not be empty." });
                 }
@@ -195,6 +184,9 @@ const updateBooks = async function (req, res) {
             }
 
             if (ISBN) {
+                if (ISBN && typeof ISBN != "string") {
+                    return res.status(400).send({ status: false, message: "ISBN must be in string" });
+                }
                 if (!ISBN.trim()) {
                     return res.status(400).send({ status: false, message: "ISBN can not be empty." });
                 }
@@ -210,6 +202,9 @@ const updateBooks = async function (req, res) {
             }
 
             if (releasedAt) {
+                if (releasedAt && typeof releasedAt != "string") {
+                    return res.status(400).send({ status: false, message: "releasedAt must be in string" });
+                }
                 let trimReleasedAt = releasedAt.trim();
                 if (moment(trimReleasedAt, "YYYY-MM-DD").format("YYYY-MM-DD") !== trimReleasedAt) {
                     return res.status(400).send({ status: false, message: "Please enter the Date in the format of 'YYYY-MM-DD'." });

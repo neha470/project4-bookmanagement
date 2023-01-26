@@ -11,14 +11,19 @@ const createUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "Request can't be empty" });
         }
 
+        if (title && typeof title != "string") {
+            return res.status(400).send({ status: false, message: "Title must be in string" });
+        }
         if (!title || !title.trim()) {
             return res.status(400).send({ status: false, message: "Title must be required or can't be empty" });
         }
-        if (typeof title != "string") {
-            return res.status(400).send({ status: false, message: "Title must be in string" });
-        }
+
         if (!["Mr", "Mrs", "Miss"].includes(title.trim())) {
             return res.status(400).send({ status: false, message: "please use a valid title as Mr,Mrs,Miss" });
+        }
+
+        if (name && typeof name != "string") {
+            return res.status(400).send({ status: false, message: "Name must be in string" });
         }
 
         if (!name || !name.trim()) {
@@ -28,6 +33,9 @@ const createUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "Enter a valid name" });
         }
 
+        if (phone && typeof phone != "string") {
+            return res.status(400).send({ status: false, message: "Phone must be in string" });
+        }
         if (!phone || !phone.trim()) {
             return res.status(400).send({ status: false, message: "Phone number must be required or can't be empty" });
         }
@@ -39,6 +47,9 @@ const createUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "phone is already exist,enter a unique number" });
         }
 
+        if (email && typeof email != "string") {
+            return res.status(400).send({ status: false, message: "Email must be in string" });
+        }
         if (!email || !email.trim()) {
             return res.status(400).send({ status: false, message: "Email must be required or email can't be empty" });
         }
@@ -50,6 +61,9 @@ const createUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "Email already exist,it should be unique" });
         }
 
+        if (password && typeof password != "string") {
+            return res.status(400).send({ status: false, message: "Password must be in string" });
+        }
         if (!password || !password.trim()) {
             return res.status(400).send({ status: false, message: "password must be required or password can't be empty" });
         }
@@ -62,24 +76,34 @@ const createUser = async function (req, res) {
                 return res.status(400).send({ status: false, message: "value of address must be in json format" });
             }
             let { street, city, pincode } = address;
-            if (!street || !city || !pincode) {
-                return res.status(400).send({ status: false, message: "street,city,pincode each one is mandatory" });
+
+            if (street && typeof street != "string") {
+                return res.status(400).send({ status: false, message: "Street must be in string" });
             }
-            street = street.trim(); city = city.trim();
-            if (typeof pincode != "number") {
-                return res.status(400).send({ status: false, message: "pincode must be number" });
+            if (!street || !street.trim()) {
+                return res.status(400).send({ status: false, message: "Street must be required or Street can't be empty" });
             }
-            if (!validatePlace(street)) {
-                return res.status(400).send({ status: false, message: "street is invalid, number is not allowed" });
+
+            if (city && typeof city != "string") {
+                return res.status(400).send({ status: false, message: "City must be in string" });
             }
-            if (!validatePlace(city)) {
+            if (!city || !city.trim()) {
+                return res.status(400).send({ status: false, message: "city must be required or city can't be empty" });
+            }
+
+            if (!validatePlace(city.trim())) {
                 return res.status(400).send({ status: false, message: "city is invalid, number is not allowed" });
             }
-            if (!validatePincode(pincode)) {
-                return res.status(400).send({ status: false, message: "pin code is invalid" });
+
+            if (pincode && typeof pincode != "string") {
+                return res.status(400).send({ status: false, message: "pincode must be in string" });
             }
-            address = { street: street, city: city, pincode: pincode }
-            data.address = address
+            if (!pincode || !pincode.trim()) {
+                return res.status(400).send({ status: false, message: "pincode must be required or pincode can't be empty" });
+            }
+            if (!validatePincode(pincode.trim())) {
+                return res.status(400).send({ status: false, message: "pincode is invalid" });
+            }
         }
 
         let userDetails = await userModel.create(data);
@@ -95,26 +119,24 @@ const loginUser = async function (req, res) {
         const data = req.body;
         let { email, password } = data;
         if (Object.keys(data).length != 0) {
+
+            if (email && typeof email != "string") {
+                return res.status(400).send({ status: false, message: "email must be in string" });
+            }
             if (!email || !email.trim()) {
                 return res.status(400).send({ status: false, message: "Email is mandatory and can not be empty." });
             }
 
-            if (typeof email != "string") {
-                return res.status(400).send({ status: false, message: "Email must be in String." });
-            }
             email = email.toLowerCase().trim();
-
-            if (!password || !password.trim()) {
-                return res.status(400).send({ status: false, message: "Password is mandatory and can not be empty." });
-            }
-
-            if (typeof password != "string") {
-                return res.status(400).send({ status: false, message: "Password must be in String." });
-            }
-            password = password.trim();
-
             if (!validateEmail(email)) {
                 return res.status(400).send({ status: false, message: "Please enter a valid Email." });
+            }
+
+            if (password && typeof password != "string") {
+                return res.status(400).send({ status: false, message: "password must be in string" });
+            }
+            if (!password || !password.trim()) {
+                return res.status(400).send({ status: false, message: "Password is mandatory and can not be empty." });
             }
 
             const userData = await userModel.findOne({ email: email, password: password });

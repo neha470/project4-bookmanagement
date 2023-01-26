@@ -1,9 +1,8 @@
 const JWT = require("jsonwebtoken");
-const mongoose = require("mongoose");
+const {isValidObjectId} = require("mongoose");
 
 const userModel = require("../model/userModel");
 const bookModel = require("../model/bookModel");
-const ObjectId = mongoose.Types.ObjectId;
 
 
 const isAuthenticated = async function (req, res, next) {
@@ -42,12 +41,16 @@ const isAuthorized = async function (req, res, next) {
         const loggedUserId = req.token.userId;
         if (req.originalUrl === "/books") {
             let userId = req.body.userId;
+            
+            if (userId && typeof userId != "string") {
+                return res.status(400).send({ status: false, message: "userId must be in string." });
+            }
             if (!userId || !userId.trim()) {
-                return res.status(400).send({ status: false, message: "userId must be present" });
+                return res.status(400).send({ status: false, message: "userId must be present for Authorization." });
             }
 
             userId = userId.trim();
-            if (!ObjectId.isValid(userId)) {
+            if (!isValidObjectId(userId)) {
                 return res.status(400).send({ status: false, message: "Invalid user id" });
             }
             const userData = await userModel.findById(userId);
@@ -57,13 +60,14 @@ const isAuthorized = async function (req, res, next) {
             if (loggedUserId != userId) {
                 return res.status(403).send({ status: false, message: "Not authorized,please provide your own user id for book creation" });
             }
+            req.body.userId = userId;
         } else {
             let bookId = req.params.bookId;
             if (!bookId) {
                 return res.status(400).send({ status: false, message: "book id is mandatory" });
             }
 
-            if (!ObjectId.isValid(bookId)) {
+            if (!isValidObjectId(bookId)) {
                 return res.status(400).send({ status: false, message: "Invalid Book ID" });
             }
 
