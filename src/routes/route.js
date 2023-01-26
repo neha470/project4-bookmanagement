@@ -10,16 +10,17 @@ const { isAuthenticated, isAuthorized } = require("../middleware/commonMIddlewar
 router.post("/register", createUser);
 router.post("/login", loginUser);
 router.post("/books", isAuthenticated, isAuthorized, createBook);
+router.post("/books/:bookId/review", reviewBook);
 router.get("/books", isAuthenticated, getBooks);
 router.get("/books/:bookId", isAuthenticated, getBookById);
 router.put("/books/:bookId", isAuthenticated, isAuthorized, updateBooks);
-router.delete("/books/:bookId", isAuthenticated, isAuthorized, deleteBookById);
-router.post("/books/:bookId/review", reviewBook);
 router.put("/books/:bookId/review/:reviewId", updateBookReview);
+router.delete("/books/:bookId", isAuthenticated, isAuthorized, deleteBookById);
 router.delete("/books/:bookId/review/:reviewId", deleteReviewById);
 
 router.all('/*', (req, res) => {
     res.status(400).send({ status: false, message: " path invalid" });
 });
+
 
 module.exports = router;
