@@ -179,7 +179,7 @@ const updateBooks = async function (req, res) {
                 if (!excerpt.trim()) {
                     return res.status(400).send({ status: false, message: "Excerpt can not be empty." });
                 }
-                let trimExcerpt = excerpt.toLowerCase().trim();
+                let trimExcerpt = excerpt.trim();
                 updateData.excerpt = trimExcerpt;
             }
 
