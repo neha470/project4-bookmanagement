@@ -1,5 +1,5 @@
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
+// const express = express.Router();
 
 const { createUser, loginUser } = require("../controller/userController");
 const { createBook, getBooks, getBookById, updateBooks, deleteBookById } = require("../controller/bookController");

@@ -10,7 +10,7 @@ const { validateISBN } = require("../validator/validator.js");
 const createBook = async function (req, res) {
     try {
         let body = req.body;
-        let { title, excerpt, userId, ISBN, category, subcategory, reviews, deletedAt, isDeleted, releasedAt } = body;
+        let { title, excerpt, ISBN, category, subcategory, releasedAt } = body;
 
         if (Object.keys(body).length == 0) {
             return res.status(400).send({ status: false, message: "Body can not be empty" });
@@ -83,7 +83,7 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "Please enter the Date in the format of 'YYYY-MM-DD'." });
 
         }
-        body.releasedAt = moment(trimReleasedAt, "YYYY-MM-DD").format("YYYY-MM-DD");
+
         const bookList = await bookModel.create(body);
 
         res.status(201).send({ status: true, message: "Success", data: bookList });
@@ -101,10 +101,10 @@ const getBooks = async function (req, res) {
 
         if (userId) {
             if (!isValidObjectId(userId)) {
-                return res.status(400).send({ status: false, message: "Invalid User ID. The length of the ID should equals to 24." });
+                return res.status(400).send({ status: false, message: "Invalid User ID." });
             }
 
-            const checkUserId = await userModel.findOne({ _id: userId });
+            const checkUserId = await userModel.findById(userId);
             if (!checkUserId) {
                 return res.status(404).send({ status: false, message: "Data not found with this User ID. Please enter a valid User ID." });
             }
@@ -131,26 +131,22 @@ const getBookById = async function (req, res) {
         }
 
         if (!isValidObjectId(bookId)) {
-            return res.status(400).send({ status: false, message: "Invalid ObjectId." });
+            return res.status(400).send({ status: false, message: "Invalid Book Id." });
         }
 
-        let getBookData = await bookModel.findOne({ _id: bookId, isDeleted: false }).select({ _id: 1 });
+        let getBookData = await bookModel.findOne({ _id: bookId, isDeleted: false }).select({ __v: 0 });
         if (!getBookData) {
-            return res.status(404).send({ status: false, message: "No book exist on this id or it might be deleted." });
+            return res.status(404).send({ status: false, message: "No book exist with this id or it might be deleted." });
         }
 
-        let id = getBookData._id;
-
-        let reviewData = await reviewModel.find({ bookId: id, isDeleted: false }).select({ _id: 1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 });
+        let reviewData = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ _id: 1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 });
 
         let reviewCount = reviewData.length;
 
-        let getReviewList = await bookModel.findOne({ _id: bookId, isDeleted: false }).select({ __v: 0, deletedAt: 0 });
+        getBookData._doc.reviewsData = reviewData;
+        getBookData._doc.reviews = reviewCount;
 
-        getReviewList._doc.reviewsData = reviewData;
-        getReviewList._doc.reviews = reviewCount;
-
-        return res.status(200).send({ status: true, message: 'Books List', data: getReviewList });
+        return res.status(200).send({ status: true, message: 'Books List', data: getBookData });
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message });
     }
@@ -255,7 +251,7 @@ const deleteBookById = async function (req, res) {
         );
 
         if (!deleteByBookId) {
-            return res.status(400).send({ status: false, message: "Book is already deleted, deletion unsuccessful" });
+            return res.status(404).send({ status: false, message: "Book is already deleted." });
         }
         await reviewModel.updateMany(
             { bookId: bookId, isDeleted: false },
@@ -264,7 +260,7 @@ const deleteBookById = async function (req, res) {
 
         return res.status(200).send({ status: true, message: "Successfully Deleted." });
     } catch (error) {
-        res.status(500).send({ status: 'error', error: error.message });
+        res.status(500).send({ status: false, error: error.message });
     }
 }
 

@@ -194,7 +194,7 @@ const deleteReviewById = async (req, res) => {
             return res.status(400).send({ status: false, message: "Book ID not relevant to Review Id." });
         }
 
-        let deleteReview = await reviewModel.findOneAndUpdate(
+        await reviewModel.findOneAndUpdate(
             { _id: reviewId, isDeleted: false },
             { isDeleted: true },
             { new: true }
@@ -205,9 +205,9 @@ const deleteReviewById = async (req, res) => {
             { $inc: { reviews: -1 } },
         );
 
-        return res.status(200).send({ status: true, message: "Successfully Deleted."});
+        return res.status(200).send({ status: true, message: "Successfully Deleted." });
     } catch (error) {
-        return res.status(500).send({ status: false, message: error.message })
+        return res.status(500).send({ status: false, message: error.message });
     }
 }
 
