@@ -44,9 +44,6 @@ const reviewBook = async function (req, res) {
                 return res.status(400).send({ status: false, message: "review can't be empty." });
             }
             review = review.trim();
-            if (typeof review != "string") {
-                return res.status(400).send({ status: false, message: "review must be string." });
-            }
             data["review"] = review;
         }
 
@@ -206,7 +203,7 @@ const deleteReviewById = async (req, res) => {
             { $inc: { reviews: -1 } },
         );
 
-        return res.status(200).send({ status: true, message: "Success", data: deleteReview });
+        return res.status(200).send({ status: true, message: "Successfully Deleted."});
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message })
     }
