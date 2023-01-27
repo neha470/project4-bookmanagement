@@ -71,8 +71,19 @@ const createBook = async function (req, res) {
         }
         subcategory = subcategory.trim();
 
-        let today = moment();
-        body.releasedAt = today.format('YYYY-MM-DD');
+        if (releasedAt && typeof releasedAt != "string") {
+            return res.status(400).send({ status: false, message: "releasedAt must be in string" });
+        }
+        if (!releasedAt || !releasedAt.trim()) {
+            return res.status(400).send({ status: false, message: "releasedAt must be present in body and can't be empty." });
+        }
+
+        let trimReleasedAt = releasedAt.trim();
+        if (moment(trimReleasedAt, "YYYY-MM-DD").format("YYYY-MM-DD") !== trimReleasedAt) {
+            return res.status(400).send({ status: false, message: "Please enter the Date in the format of 'YYYY-MM-DD'." });
+
+        }
+        body.releasedAt = moment(trimReleasedAt, "YYYY-MM-DD").format("YYYY-MM-DD");
 
         const bookList = await bookModel.create(body);
 
@@ -209,7 +220,7 @@ const updateBooks = async function (req, res) {
                 if (moment(trimReleasedAt, "YYYY-MM-DD").format("YYYY-MM-DD") !== trimReleasedAt) {
                     return res.status(400).send({ status: false, message: "Please enter the Date in the format of 'YYYY-MM-DD'." });
                 }
-                updateData.releasedAt = trimReleasedAt;
+                updateData.releasedAt = moment(trimReleasedAt, "YYYY-MM-DD").format("YYYY-MM-DD");
             }
 
             const updateBookDetails = await bookModel.findOneAndUpdate(
@@ -248,7 +259,7 @@ const deleteBookById = async function (req, res) {
             { isDeleted: true }
         );
 
-        return res.status(200).send({ status: true, message: "Successfully Deleted."});
+        return res.status(200).send({ status: true, message: "Successfully Deleted." });
     } catch (error) {
         res.status(500).send({ status: 'error', error: error.message });
     }
