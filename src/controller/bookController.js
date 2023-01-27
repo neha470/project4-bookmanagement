@@ -248,7 +248,7 @@ const deleteBookById = async function (req, res) {
             { isDeleted: true }
         );
 
-        return res.status(200).send({ status: true, message: "Success", data: deleteByBookId });
+        return res.status(200).send({ status: true, message: "Successfully Deleted."});
     } catch (error) {
         res.status(500).send({ status: 'error', error: error.message });
     }
