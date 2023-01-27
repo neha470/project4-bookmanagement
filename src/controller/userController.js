@@ -2,6 +2,7 @@ const userModel = require("../model/userModel");
 const jwt = require("jsonwebtoken");
 const { validateName, validateEmail, validatePassword, validateMobileNo, validatePincode, validatePlace } = require("../validator/validator");
 
+// ==========================================POST API'S FOR USER===========================================================
 
 const createUser = async function (req, res) {
     try {
@@ -113,6 +114,7 @@ const createUser = async function (req, res) {
     }
 }
 
+// =================================================LOGIN API'S==============================================================
 
 const loginUser = async function (req, res) {
     try {

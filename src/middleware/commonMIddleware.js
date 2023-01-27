@@ -1,9 +1,9 @@
 const JWT = require("jsonwebtoken");
 const {isValidObjectId} = require("mongoose");
-
 const userModel = require("../model/userModel");
 const bookModel = require("../model/bookModel");
 
+// ==========================================AUTHENTICATION=========================================================
 
 const isAuthenticated = async function (req, res, next) {
     try {
@@ -35,6 +35,7 @@ const isAuthenticated = async function (req, res, next) {
     }
 }
 
+// ============================================AUTHORISATION=====================================================================
 
 const isAuthorized = async function (req, res, next) {
     try {

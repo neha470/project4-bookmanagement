@@ -1,11 +1,10 @@
 const { default: mongoose } = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
-
 const reviewModel = require("../model/reviewModel");
 const bookModel = require("../model/bookModel");
 const { validateName } = require("../validator/validator");
 
-
+// ===============================POST API'S FOR BOOK REVIEWS========================================================
 
 const reviewBook = async function (req, res) {
     try {
@@ -83,6 +82,8 @@ const reviewBook = async function (req, res) {
         return res.status(500).send({ status: false, message: err.message });
     }
 }
+
+// ==============================PUT API'S FOR BOOK REVIEW==========================================================
 
 const updateBookReview = async function (req, res) {
     try {
@@ -165,6 +166,7 @@ const updateBookReview = async function (req, res) {
     }
 }
 
+// ================================DELETE API'S FOR BOOK REVIEW BY ID=====================================================
 
 const deleteReviewById = async (req, res) => {
     try {

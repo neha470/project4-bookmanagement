@@ -1,11 +1,11 @@
 const moment = require("moment");
 const { isValidObjectId } = require("mongoose");
-
 const bookModel = require("../model/bookModel.js");
 const userModel = require("../model/userModel");
 const reviewModel = require("../model/reviewModel");
 const { validateISBN } = require("../validator/validator.js");
 
+// =====================================POST API FOR BOOKS=====================================================
 
 const createBook = async function (req, res) {
     try {
@@ -84,7 +84,6 @@ const createBook = async function (req, res) {
 
         }
         body.releasedAt = moment(trimReleasedAt, "YYYY-MM-DD").format("YYYY-MM-DD");
-
         const bookList = await bookModel.create(body);
 
         res.status(201).send({ status: true, message: "Success", data: bookList });
@@ -93,6 +92,7 @@ const createBook = async function (req, res) {
     }
 }
 
+// ========================================GET API'S FOR BOOK DETAILS BY QUERY==============================================================
 
 const getBooks = async function (req, res) {
     try {
@@ -121,6 +121,7 @@ const getBooks = async function (req, res) {
     }
 }
 
+// =================================GETTING THE BOOK DEATAILS BY ID=================================================================
 
 const getBookById = async function (req, res) {
     try {
@@ -155,6 +156,7 @@ const getBookById = async function (req, res) {
     }
 }
 
+// =================================PUT API'S FOR BOOKS==========================================================================
 
 const updateBooks = async function (req, res) {
     try {
@@ -241,6 +243,7 @@ const updateBooks = async function (req, res) {
     }
 }
 
+// ====================================DELETE API'S FOR BOOK BY ID =================================================
 
 const deleteBookById = async function (req, res) {
     try {
