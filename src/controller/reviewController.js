@@ -1,12 +1,17 @@
-const { default: mongoose } = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
 const reviewModel = require("../model/reviewModel");
 const bookModel = require("../model/bookModel");
+
+const ObjectId = mongoose.Types.ObjectId;
+const { default: mongoose } = require("mongoose");
 const { validateName } = require("../validator/validator");
 
-// ===============================POST API'S FOR BOOK REVIEWS========================================================
 
-const reviewBook = async function (req, res) {
+
+// ================================= Create Reviews For Books ==============================================//
+
+
+
+const reviewBook = async function ( req , res ) {
     try {
         let data = req.body;
         const bookId = req.params.bookId;
@@ -15,10 +20,13 @@ const reviewBook = async function (req, res) {
         if (!bookId) {
             return res.status(400).send({ status: false, message: "please provide book id." });
         }
+
         if (!ObjectId.isValid(bookId)) {
             return res.status(400).send({ status: false, message: "Invalid book id." });
-        }
+        } 
+
         const checkBook = await bookModel.findOne({ _id: bookId, isDeleted: false });
+        
         if (!checkBook) {
             return res.status(404).send({ status: false, message: "Book id does not exist in database." });
         }
@@ -26,22 +34,29 @@ const reviewBook = async function (req, res) {
         if (!rating) {
             return res.status(400).send({ status: false, message: "please provide rating, it is mandatory." });
         }
+
         rating = parseFloat(rating);
+        
         if (!rating || (!(rating <= 5 && rating >= 1))) {
             return res.status(400).send({ status: false, message: "rating is invalid. It must be 1 to 5." });
         }
+
         data["rating"] = rating;
 
         if (review == "") {
             return res.status(400).send({ status: false, message: "review can't be empty." });
         }
+
         if (review) {
+
             if (typeof review != "string") {
                 return res.status(400).send({ status: false, message: "review must be in string" });
             }
+
             if (!review.trim()) {
                 return res.status(400).send({ status: false, message: "review can't be empty." });
             }
+
             review = review.trim();
             data["review"] = review;
         }
@@ -49,11 +64,15 @@ const reviewBook = async function (req, res) {
         if (reviewedBy == "") {
             data["reviewedBy"] = "Guest";
         }
+
         if (reviewedBy) {
+
             if (typeof reviewedBy != "string") {
                 return res.status(400).send({ status: false, message: "reviewedBy must be string." });
             }
+
             reviewedBy = reviewedBy.trim();
+
             if (!validateName(reviewedBy)) {
                 return res.status(400).send({ status: false, message: "reviewer name is invalid." });
             }
@@ -83,9 +102,13 @@ const reviewBook = async function (req, res) {
     }
 }
 
-// ==============================PUT API'S FOR BOOK REVIEW==========================================================
 
-const updateBookReview = async function (req, res) {
+
+// ============================== Update Reviews Of Books =====================================================//
+
+
+
+const updateBookReview = async function ( req , res ) {
     try {
         let data = req.params;
         let { bookId, reviewId } = data;
@@ -96,7 +119,9 @@ const updateBookReview = async function (req, res) {
         if (!ObjectId.isValid(bookId)) {
             return res.status(400).send({ status: false, message: "Invalid Book ID." });
         }
+
         let checkBookId = await bookModel.findOne({ _id: bookId, isDeleted: false });
+
         if (!checkBookId) {
             return res.status(404).send({ status: false, message: "This book ID is not exist or might be deleted." });
         }
@@ -104,12 +129,15 @@ const updateBookReview = async function (req, res) {
         if (!ObjectId.isValid(reviewId)) {
             return res.status(400).send({ status: false, message: "Invalid Review ID." });
         }
+
         let checkReview = await reviewModel.findOne({ _id: reviewId, isDeleted: false });
+
         if (!checkReview) {
             return res.status(404).send({ status: false, message: "This Review ID is not exist or might be deleted." });
         }
 
         checkReview = checkReview.bookId;
+
         if (checkReview != bookId) {
             return res.status(400).send({ status: false, message: "Book ID not relevant to Review Id." });
         }
@@ -119,17 +147,22 @@ const updateBookReview = async function (req, res) {
         }
 
         let updateData = {};
+
         if (reviewedBy) {
             if (typeof reviewedBy != "string") {
                 return res.status(400).send({ status: false, message: "reviewedBy must be string." });
             }
+
             if (!reviewedBy.trim()) {
                 return res.status(400).send({ status: false, message: "reviewedBy can not be empty." });
             }
+
             reviewedBy = reviewedBy.trim();
+
             if (!validateName(reviewedBy)) {
                 return res.status(400).send({ status: false, message: "reviewer name is invalid." });
             }
+
             updateData.reviewedBy = reviewedBy;
         }
 
@@ -137,18 +170,22 @@ const updateBookReview = async function (req, res) {
             if (typeof review != "string") {
                 return res.status(400).send({ status: false, message: "review must be string." });
             }
+
             if (!review.trim()) {
                 return res.status(400).send({ status: false, message: "review can not be empty." });
             }
+
             review = review.trim();
             updateData.review = review;
         }
 
         if (rating) {
             rating = parseFloat(rating);
+
             if (!rating || (!(rating <= 5 && rating >= 1))) {
                 return res.status(400).send({ status: false, message: "rating is invalid. It must be 1 to 5." });
             }
+
             updateData.rating = rating;
         }
 
@@ -166,9 +203,13 @@ const updateBookReview = async function (req, res) {
     }
 }
 
-// ================================DELETE API'S FOR BOOK REVIEW BY ID=====================================================
 
-const deleteReviewById = async (req, res) => {
+
+// ================================= Delete Revies of Books =====================================================//
+
+
+
+const deleteReviewById = async function ( req , res ) {
     try {
         let data = req.params;
         let { bookId, reviewId } = data;
@@ -176,7 +217,9 @@ const deleteReviewById = async (req, res) => {
         if (!ObjectId.isValid(bookId)) {
             return res.status(400).send({ status: false, message: "Invalid Book ID." });
         }
+
         let checkBookId = await bookModel.findOne({ _id: bookId, isDeleted: false });
+
         if (!checkBookId) {
             return res.status(404).send({ status: false, message: "This book ID is not exist or might be deleted." });
         }
@@ -184,12 +227,15 @@ const deleteReviewById = async (req, res) => {
         if (!ObjectId.isValid(reviewId)) {
             return res.status(400).send({ status: false, message: "Invalid Review ID." });
         }
+
         let checkReview = await reviewModel.findOne({ _id: reviewId, isDeleted: false });
+
         if (!checkReview) {
             return res.status(404).send({ status: false, message: "This Review ID is not exist or might be deleted." });
         }
 
         checkReview = checkReview.bookId;
+
         if (checkReview != bookId) {
             return res.status(400).send({ status: false, message: "Book ID not relevant to Review Id." });
         }
@@ -210,6 +256,8 @@ const deleteReviewById = async (req, res) => {
         return res.status(500).send({ status: false, message: error.message });
     }
 }
+
+
 
 
 module.exports = { reviewBook, updateBookReview, deleteReviewById };
