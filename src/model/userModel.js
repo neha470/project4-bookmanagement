@@ -43,8 +43,8 @@ const userSchema = new mongoose.Schema(
         trim : true 
         },
         pincode : { 
-        type: String, 
-        trim: true 
+        type : String, 
+        trim : true 
         }
     },
 }, { timestamps : true })

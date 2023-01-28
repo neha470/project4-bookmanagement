@@ -35,8 +35,10 @@ router.delete("/books/:bookId", isAuthenticated, isAuthorized, deleteBookById);
 router.delete("/books/:bookId/review/:reviewId", deleteReviewById);
 
 
+//================================= Invalid Path API =========================================//
 
-router.all('/*', (req, res) => {
+
+router.all('/*', (req , res) => {
     res.status(400).send({ status: false, message: " path invalid" });
 });
 
