@@ -1,8 +1,8 @@
 const reviewModel = require("../model/reviewModel");
 const bookModel = require("../model/bookModel");
 
-const ObjectId = mongoose.Types.ObjectId;
 const { default: mongoose } = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 const { validateName } = require("../validator/validator");
 
 
@@ -242,8 +242,7 @@ const deleteReviewById = async function ( req , res ) {
 
         await reviewModel.findOneAndUpdate(
             { _id: reviewId, isDeleted: false },
-            { isDeleted: true },
-            { new: true }
+            { isDeleted: true }
         );
 
         await bookModel.findOneAndUpdate(

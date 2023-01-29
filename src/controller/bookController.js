@@ -273,7 +273,7 @@ const updateBooks = async function (req, res) {
                     return res.status(400).send({ status: false, message: "Please enter the Date in the format of 'YYYY-MM-DD'." });
                 }
 
-                updateData.releasedAt = moment(trimReleasedAt, "YYYY-MM-DD").format("YYYY-MM-DD");
+                updateData.releasedAt = trimReleasedAt;
             }
 
             const updateBookDetails = await bookModel.findOneAndUpdate(
@@ -306,8 +306,7 @@ const deleteBookById = async function ( req , res ) {
         let bookId = req.params.bookId;
         let deleteByBookId = await bookModel.findOneAndUpdate(
             { _id: bookId, isDeleted: false },
-            { isDeleted: true, deletedAt: Date.now() },
-            { new: true }
+            { isDeleted: true, deletedAt: Date.now() }
         );
 
         if (!deleteByBookId) {
